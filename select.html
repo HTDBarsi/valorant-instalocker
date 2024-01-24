@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Val-lock</title>
+    <script>
+        const httpRequest = (url, method = 'GET') => {
+        return new Promise((resolve, reject) => {
+            const xhr = new XMLHttpRequest();
+            xhr.open(method, url);
+            xhr.onload = () => {
+            if (xhr.status === 200) {
+                resolve(xhr.responseText);
+            } else {
+                reject(new Error(xhr.responseText));
+            }
+            };
+            xhr.send();
+        });
+        };
+
+        httpRequest("https://valorant-api.com/v1/agents?isPlayableCharacter=true").then(response=>{
+            const data = JSON.parse(response)
+            document.write('<html><head><link rel="stylesheet" href="style.css"></head><body><div class="grid-container">')
+            data["data"].forEach((val)=>{
+                document.write(`<button class="grid-item" id="${val["displayName"]}"><img src="${val["displayIcon"]}"></button>`);
+                document.getElementById(val["displayName"]).addEventListener('click', () => {
+                    fetch(`/lock?agent=${val.displayName}`)
+                });
+            })
+            document.write("</div></body></html>")
+        })
+    </script>
+</head>
+<body>
+    
+</body>
+</html>
